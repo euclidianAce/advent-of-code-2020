@@ -8,22 +8,45 @@ local function printf(fmt: string, ...: any)
    print(string.format(fmt, ...))
 end
 
-for i = 1, #nums do
-   for j = i+1, #nums do
-      local a <const>, b <const> = nums[i], nums[j]
-      if a + b == 2020 then
-         printf("%d + %d = 2020\n%d * %d = %d", a, b, a, b, a * b)
+-- generic nesting iterator, very necessary, definitely
+local function nestedIter<T>(list: {T}, num: number): function(): T...
+   local len <const> = #list
+   local indexes = { 0 }
+   for i = 2, num do
+      indexes[i] = 1
+   end
+   return function(): T...
+      local i = 1
+      while true do
+         indexes[i] = indexes[i] + 1
+         if indexes[i] > len then
+            indexes[i] = indexes[i+1]
+            i = i + 1
+            if i > num then
+               return nil
+            end
+         else
+            break
+         end
       end
+      local rets: {T} = {}
+      for _, idx in ipairs(indexes) do
+         table.insert(rets, list[idx])
+      end
+      return table.unpack(rets)
    end
 end
 
-for i = 1, #nums do
-   for j = i, #nums do
-      for k = j, #nums do
-         local a <const>, b <const>, c <const> = nums[i], nums[j], nums[k]
-         if a + b + c == 2020 then
-            printf("%d + %d + %d = 2020\n%d * %d * %d = %d", a, b, c, a, b, c, a * b * c)
-         end
-      end
+for a, b in nestedIter(nums, 2) do
+   if a + b == 2020 then
+      printf("%d + %d = 2020", a, b)
+      printf("%d * %d = %d", a, b, a * b)
+   end
+end
+
+for a, b, c in nestedIter(nums, 3) do
+   if a + b + c == 2020 then
+      printf("%d + %d + %d = 2020", a, b, c)
+      printf("%d * %d * %d = %d", a, b, c, a * b * c)
    end
 end
