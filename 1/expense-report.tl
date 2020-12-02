@@ -41,6 +41,7 @@ for a, b in nestedIter(nums, 2) do
    if a + b == 2020 then
       printf("%d + %d = 2020", a, b)
       printf("%d * %d = %d", a, b, a * b)
+      break
    end
 end
 
@@ -48,5 +49,6 @@ for a, b, c in nestedIter(nums, 3) do
    if a + b + c == 2020 then
       printf("%d + %d + %d = 2020", a, b, c)
       printf("%d * %d * %d = %d", a, b, c, a * b * c)
+      break
    end
 end
