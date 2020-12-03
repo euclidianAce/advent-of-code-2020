@@ -1,0 +1,4 @@
+
+project proj is
+	for Main use ("main");
+end proj
