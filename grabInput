@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# $1: day
+# $2: session cookie
+# To get your session cookie in firefox, hit F12 and go to the storage tab, there should be a 'session' item there, just copy paste the value
+wget --no-cookies --header "Cookie: session=$2" "https://adventofcode.com/2020/day/$1/input" -O input.txt
