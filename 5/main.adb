@@ -1,74 +1,74 @@
 
-with Ada.Text_IO; use Ada.Text_Io;
-with Ada.Exceptions;
+with ada.text_io; use ada.text_io;
+with ada.exceptions;
 
-procedure Main is
-	File_Name   : constant String := "input.txt";
-	File_Handle : File_Type;
-	subtype Row is Natural range 0 .. 127;
-	subtype Col is Natural range 0 .. 7;
+procedure main is
+	file_name   : constant string := "input.txt";
+	file_handle : file_type;
+	subtype row is natural range 0 .. 127;
+	subtype col is natural range 0 .. 7;
 
-	Row_Lower_Bound : Row := Row'First;
-	Row_Upper_Bound : Row := Row'Last;
-	Col_Lower_Bound : Col := Col'First;
-	Col_Upper_Bound : Col := Col'Last;
+	row_lower_bound : row := row'first;
+	row_upper_bound : row := row'last;
+	col_lower_bound : col := col'first;
+	col_upper_bound : col := col'last;
 
-	function Get_Row_Interval return Row is
+	function get_row_interval return row is
 	begin
-		return (Row_Upper_Bound - Row_Lower_Bound) / 2 + 1;
-	end Get_Row_Interval;
-	function Get_Col_Interval return Col is
+		return (row_upper_bound - row_lower_bound) / 2 + 1;
+	end get_row_interval;
+	function get_col_interval return col is
 	begin
-		return (Col_Upper_Bound - Col_Lower_Bound) / 2 + 1;
-	end Get_Col_Interval;
+		return (col_upper_bound - col_lower_bound) / 2 + 1;
+	end get_col_interval;
 
-	Line : String (1 .. 10);
+	line : string (1 .. 10);
 
-	Current_Row : Row := 0;
-	Current_Col : Col := 0;
+	current_row : row := 0;
+	current_col : col := 0;
 
-	Smallest_Seat_ID : Natural := Natural'Last;
-	Largest_Seat_ID  : Natural := 0;
-	Seat_ID          : Natural := 0;
-	ID_Set           : array (0 .. 1000) of Boolean;
+	smallest_seat_id : natural := natural'last;
+	largest_seat_id  : natural := 0;
+	seat_id          : natural := 0;
+	id_set           : array (0 .. 1000) of boolean;
 begin
-	Open (File_Handle, In_File, File_Name);
+	open (file_handle, in_file, file_name);
 	loop
-		Line := Get_Line (File_Handle);
-		for C of Line loop
-			case C is
-				when 'F' => Row_Upper_Bound := Row_Upper_Bound - Get_Row_Interval;
-				when 'B' => Row_Lower_Bound := Row_Lower_Bound + Get_Row_Interval;
+		line := get_line (file_handle);
+		for c of line loop
+			case c is
+				when 'F' => row_upper_bound := row_upper_bound - get_row_interval;
+				when 'B' => row_lower_bound := row_lower_bound + get_row_interval;
 
-				when 'L' => Col_Upper_Bound := Col_Upper_Bound - Get_Col_Interval;
-				when 'R' => Col_Lower_Bound := Col_Lower_Bound + Get_Col_Interval;
-				when others => raise Constraint_Error;
+				when 'L' => col_upper_bound := col_upper_bound - get_col_interval;
+				when 'R' => col_lower_bound := col_lower_bound + get_col_interval;
+				when others => raise constraint_error;
 			end case;
 		end loop;
 
-		Seat_ID := Natural (Row_Upper_Bound * 8 + Col_Upper_Bound);
-		if Seat_ID > Largest_Seat_ID then
-			Largest_Seat_ID := Seat_ID;
+		seat_id := natural (row_upper_bound * 8 + col_upper_bound);
+		if seat_id > largest_seat_id then
+			largest_seat_id := seat_id;
 		end if;
-		if Seat_ID < Smallest_Seat_ID then
-			Smallest_Seat_ID := Seat_ID;
+		if seat_id < smallest_seat_id then
+			smallest_seat_id := seat_id;
 		end if;
-		ID_Set (Seat_ID) := True;
-		Row_Lower_Bound := Row'First;
-		Row_Upper_Bound := Row'Last;
-		Col_Lower_Bound := Col'First;
-		Col_Upper_Bound := Col'Last;
+		id_set (seat_id) := true;
+		row_lower_bound := row'first;
+		row_upper_bound := row'last;
+		col_lower_bound := col'first;
+		col_upper_bound := col'last;
 
-		exit when End_Of_File (File_Handle);
+		exit when end_of_file (file_handle);
 	end loop;
-	Close (File_Handle);
+	close (file_handle);
 
-	Put_Line ("Largest Seat ID: " & Largest_Seat_ID'Image);
+	put_line ("largest seat id: " & largest_seat_id'image);
 
-	for ID in Smallest_Seat_ID .. Largest_Seat_ID loop
-		Seat_ID := ID;
-		exit when not ID_Set (ID);
+	for id in smallest_seat_id .. largest_seat_id loop
+		seat_id := id;
+		exit when not id_set (id);
 	end loop;
 
-	Put_Line ("Missing Seat ID: " & Seat_ID'Image);
-end Main;
+	put_line ("missing seat id: " & seat_id'image);
+end main;
