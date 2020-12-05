@@ -6,3 +6,7 @@ end_of_line=lf
 [*.tl]
 indent_style = space
 indent_size = 3
+
+[*.adb]
+indent_style = tab
+indent_size = 3
